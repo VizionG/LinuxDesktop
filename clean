@@ -1,0 +1,73 @@
+#!/usr/bin/bash
+
+# Repositories
+sudo add-apt-repository ppa:lutris-team/lutris
+
+sudo apt update
+sudo apt upgrade
+
+#Variables
+variable=$USER
+
+## Dependecies
+
+## Unzip
+sudo apt-get install unzip
+## Git
+sudo apt-get install git
+## Make
+sudo apt-get install make
+## Cargo
+curl https://sh.rustup.rs -sSf | sh
+
+## Download Files
+echo (Downloading Files...)
+
+wget "https://github.com/WaterfoxCo/Waterfox/releases/download/G4.0.8/$waterfox"
+wget "https://github.com/VizionG/LinuxDesktop/raw/master/WaterFox/waterfox.desktop" -P /home/$USER/.local/share/applications
+wget "https://github.com/VizionG/LinuxDesktop/raw/master/WaterFox/.waterfox.zip"
+wget "https://github.com/VizionG/LinuxDesktop/raw/master/Spotify-Adblock/Spotify(Adblock).desktop" -P /home/$USER/.local/share/applications
+wget -O discord.deb "https://discord.com/api/download?platform=linux&format=deb" -P /opt/
+
+## Waterfox
+
+waterfox="waterfox-G4.0.8.en-US.linux-x86_64.tar.bz2"
+profile=".waterfox.zip"
+echo "Unzipping $waterfox"
+sudo unzip "$profile" -d /home/$USER/
+sudo tar -xf "$waterfox" -C /opt/
+sudo chmod 747 /opt/waterfox/waterfox
+sudo chown -R $USER /home/$USER/.waterfox
+## sudo desktop-file-install waterfox.desktop
+
+## Spotify
+
+curl -sS https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg | sudo apt-key add - 
+echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+sudo apt-get update && sudo apt-get install spotify-client
+
+## Spotify-Adblock
+
+git clone https://github.com/abba23/spotify-adblock.git "/home/$USER/.spotify-adblock"
+make -C /home/$USER/.spotify-adblock
+(cd /home/$USER/spotify-adblock && sudo make install)
+
+
+## Lutris
+
+sudo apt install lutris
+
+## Discord
+sudo dpkg -i /opt/discord.deb
+
+## Clean Script Files
+echo (Cleaning Temp Files)
+
+
+rm -f "$waterfox"
+rm -f "$profile"
+rm -r -f "/home/$USER/.spotify-adblock"
+sudo rm /opt/discord.deb
+
+## Complete
+echo (Script Completed)
