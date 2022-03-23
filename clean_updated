@@ -1,0 +1,121 @@
+#!/usr/bin/bash
+
+# Repositories
+sudo add-apt-repository ppa:lutris-team/lutris
+
+sudo apt update
+sudo apt upgrade
+
+
+#Variables
+echo $USER
+variable=$USER
+appicon="/home/$USER/.local/share/applications"
+temp="/home/$USER/Downloads/Temp"
+
+
+## Create Temp Folder
+
+mkdir /home/$USER/Downloads/Temp
+
+
+## Dependecies
+
+## Wget
+sudo apt install wget
+## Unzip
+sudo apt-get install unzip
+## Git
+sudo apt-get install git
+## Make
+sudo apt-get install make
+## Curl
+sudo apt install curl
+## Cargo
+curl https://sh.rustup.rs -sSf | sh
+## NodeJs
+sudo apt install nodejs
+
+
+## Download Files
+echo "Downloading Files..."
+
+cd /home/$USER/Downloads/Temp
+wget "http://archive.ubuntu.com/ubuntu/pool/multiverse/f/fdk-aac/libfdk-aac1_0.1.5-1_amd64.deb" -O "libfdk.deb" 
+wget "https://github.com/VizionG/LinuxDesktop/raw/master/WaterFox/waterfox.desktop" -P $appicon
+wget "https://github.com/VizionG/LinuxDesktop/raw/master/WaterFox/.waterfox.zip"
+wget "https://github.com/VizionG/LinuxDesktop/raw/master/Spotify-Adblock/Spotify(Adblock).desktop" -P $appicon
+wget "https://discord.com/api/download?platform=linux&format=deb" -O "discord.deb"
+wget "https://cdn.cloudflare.steamstatic.com/client/installer/steam.deb"
+wget "https://dl.strem.io/shell-linux/v4.4.142/stremio_4.4.142-1_amd64.deb" -O "stremio.deb"
+wget "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" -O "visual.deb"
+wget "https://files.multimc.org/downloads/multimc_1.6-1.deb" -O "multimc.deb"
+
+## libfdk
+
+sudo dpkg -i "$temp/libfdk.deb"
+
+## Waterfox
+
+waterfox="waterfox-G4.0.8.en-US.linux-x86_64.tar.bz2"
+profile=".waterfox.zip"
+wget "https://github.com/WaterfoxCo/Waterfox/releases/download/G4.0.8/$waterfox"
+echo "Unzipping $waterfox"
+sudo unzip "$profile" -d /home/$USER/
+sudo tar -xf "$waterfox" -C /opt/
+sudo chmod 747 /opt/waterfox/waterfox
+sudo chown -R $USER /home/$USER/.waterfox
+## sudo desktop-file-install waterfox.desktop
+
+## Spotify
+
+curl -sS https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg | sudo apt-key add - 
+echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+sudo apt-get update && sudo apt-get install spotify-client
+
+## Spotify-Adblock
+
+git clone https://github.com/abba23/spotify-adblock.git "/home/$USER/.spotify-adblock"
+make -C /home/$USER/.spotify-adblock
+(cd /home/$USER/spotify-adblock && sudo make install)
+
+
+## Lutris
+
+sudo apt install lutris
+
+## VLC
+
+sudo apt install vlc
+
+## Discord
+
+sudo dpkg -i "$temp/discord.deb"
+
+## Steam
+
+sudo dpkg -i "$temp/steam.deb"
+
+## Stremio
+
+sudo dpkg -i "$temp/stremio.deb"
+
+## Visual Studio Code
+
+sudo dpkg -i "$temp/visual.deb"
+
+pid=$!
+wait $pid
+
+## Clean Script Files
+echo "Cleaning Temp Files"
+
+
+sudo rm -f "$waterfox"
+sudo rm -f "$profile"
+sudo rm -r /home/$USER/.spotify-adblock
+sudo rm -r $temp
+sudo apt autoremove
+
+## Complete
+echo "Script Completed"
