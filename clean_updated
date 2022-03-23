@@ -16,7 +16,9 @@ temp="/home/$USER/Downloads/Temp"
 
 ## Create Temp Folder
 
-mkdir /home/$USER/Downloads/Temp
+for dir in /home/$USER/Downloads; do
+    mkdir "$dir" /Temp
+done
 
 
 ## Dependecies
