@@ -16,10 +16,7 @@ temp="/home/$USER/Downloads/Temp"
 
 ## Create Temp Folder
 
-for dir in /home/$USER/Downloads; do
-    mkdir "$dir" /Temp
-done
-
+mkdir ~/Downloads/Temp
 
 ## Dependecies
 
@@ -100,11 +97,15 @@ sudo dpkg -i "$temp/steam.deb"
 
 ## Stremio
 
-sudo dpkg -i "$temp/stremio.deb"
+##sudo dpkg -i "$temp/stremio.deb"
 
 ## Visual Studio Code
 
 sudo dpkg -i "$temp/visual.deb"
+
+## MultiMC
+
+sudo dpkg -i "$temp/multimc.deb"
 
 pid=$!
 wait $pid
